@@ -225,28 +225,178 @@ print()
 print()
 
 #  3. INHERITANCE: Allows new objects to take properties from existing objects (one class inherits another class)
-class User:
+class User: # PARENT CLASS / BASE CLASS
     # __init__ method (constructor) is missing because we don't want to assign any attribute/variable to the
     # class User
     def sign_in(self):
         print("Logged In!")
 
+    def attack(self): # super-class attack() method
+        print('do nothing!')
 
-class Wizard(User): # Wizard inherits 'sign_in' from User
+
+class Wizard(User): # Wizard inherits 'sign_in' from User - CHILD CLASS / SUB CLASS
     def __init__(self, name, power):
         self.name = name
         self.power = power
-    def attack(self):
+    def attack(self): # This definition of attack() will override the definition of attack() in the 'User' parent class
+        User.attack(self) # However, we can still call the parent class method within this class
         print(f"attacking with power of {self.power}")
 
-class Archer(User): # Archer inherits 'sign_in' from User
+class Archer(User): # Archer inherits 'sign_in' from User - CHILD CLASS / SUB CLASS
     def __init__(self, name, num_arrows):
         self.name = name
         self.num_arrows = num_arrows 
-    def attack(self):
+    def attack(self): # This definition of attack() will override the definition in the 'User' super-class / parent class
+        # User.attack(self) # However, we can still call the parent class method within this class
         print(f"attacking with arrows: arrows left - {self.num_arrows}")
 
 wizard1 = Wizard('Merlin', 50)
 archer1 = Archer('Robin', 100)
 # both wizard1 and archer1 will have a common sign_in() method an a unique implementation of the attack() method
 print("wizard1 : ", wizard1)
+print("archer1 : ", archer1)
+# Power of Inheritance (and also Polymorphism):
+wizard1.attack()
+archer1.attack()
+wizard1.sign_in()
+archer1.sign_in()
+
+
+print()
+print()
+# isinstance() is a built-in function in python to check if an object is the instance of a class
+print("isinstance(wizard1, Wizard) : ", isinstance(wizard1, Wizard))
+print("isinstance(wizard1, Archer) : ", isinstance(wizard1, Archer))
+print("isinstance(wizard1, User) : ", isinstance(wizard1, User)) # True, wizard1 is an instance of its parent class
+# Check if one Class is the child / sub class of another Class
+print("issubclass(Wizard, User) : ", issubclass(Wizard, User)) # True
+
+# EVERY OBJECT IN PYTHON INHERITS FROM ITS BUILT-IN BASE CLASS CALLED 'object'
+# THIS 'object' CLASS PROVIDES A SET OF UNIVERSAL DUNDER METHODS THAT EVERY PYTHON PBJECT WILL HAVE.
+print("isinstance(wizard1, object) : ", isinstance(wizard1, object)) 
+
+# Hence, the 'wizard1' object inherits from 'object', 'User' and 'Wizard'.
+
+
+#  4. POLYMORPHISM: Two classes can have the same method name, but their methods can perform different actions/output.
+#   A good example for this are the 'wizard1.attack()' and 'archer1.attack()' methods.  
+
+
+# Examples showing how same method of two different objects performs different actions or provides different output
+# The same method can be customized according to our needs in two different Classes.
+def player_attack(character):
+    character.attack()
+
+print()
+print()
+print("player_attack(wizard1) : ", player_attack(wizard1))
+print("player_attack(archer1) : ", player_attack(archer1))
+
+for char in [wizard1, archer1]:
+    char.attack()
+
+
+print()
+print()
+print()
+
+
+# THE KEYWORD 'super' 
+# CHILD CLASS CONSTRUCTORS, (AS WELL AS METHODS AND ATTRIBUTES OF SAME NAME) HAVE PRECEDENCE OVER THE PARENT CLASS.
+# We can access the Parent Class constructor (as well as methods and attributes) using the 'super' keyword which
+# refers to the Parent Class when used inside the Child Class
+
+# Parent class with Constructor
+class User2:
+    def __init__(self, email):
+        self.email = email
+    def sign_in(self):
+        print('logged in!')
+
+# Child class with constructor
+class Wizard2(User2):
+    def __init__(self, name, power, email):
+        # Calling the Parent Class constructor directly and passing its corresponding argument
+        # User.__init__(self, email) # one way of using Parent Class members
+        super().__init__(email) # Using the 'super' keyword to access Parent Class members
+        self.name = name
+        self.power = power
+    def attack(self):
+        print(f'attacking with power of {self.power}')
+
+wizard2 = Wizard2('Merlin', 60, 'merlin@wizardmail.com') # Object Creation
+wizard2.attack() # object 'wizard2' has the attack() method from the child class
+# print("wizard2.email : ", wizard2.email) # ERROR! - Object 'wizard2' does not have the 'email' attribute because
+# it was created using the child class (Wizard2) constructor. This constructor does not require an 'email' argument
+# and this argument was not provided during creation of object 'wizard2'
+
+
+
+print()
+print()
+# INTROSPECTION - Determine the type of an Object during Code Runtime
+
+print("dir(wizard2) : ", dir(wizard2))
+
+print()
+print()
+
+# DUNDER METHODS / SPECIAL METHODS - They are special methods in-built in python for every object that are not to be touched
+# Dunder Method allow Classes to IMPLEMENT OPERATIONS that are INVOKED THROUGH SPECIAL SYNTAX like list slicing 
+# and arithmetic operations etc. by performing OPERATOR OVERLOADING. Setting a dunder method to 'None' means that
+# object/Class corresponding operation is not available for that Object/Class. Setting '__iter__' to 'None' for
+# example, means that the object is not iterable. 
+# Another example is the __str__() Dunder method that is used toconvert an object to its string representation.
+# len() uses the __len__() dunder method to get the length of an object
+
+class Toy():
+    def __init__(self, colour, age):
+        self.colour = colour
+        self.age = age
+    
+action_figure = Toy('Red', 0)
+print("\n\nBEFORE OVERLOADING __str__()")
+print("action_figure.__str__() : ", action_figure.__str__())
+print("str(action_figure) : ", str(action_figure))
+# ERRORS because __len__() is not available for user-defined classes like 'Toy' by default
+# print("action_figure.__len__() : ", action_figure.__len__())
+# print("len(action_figure) : ", len(action_figure))
+
+
+class Toy2():
+    def __init__(self, colour, age):
+        self.colour = colour
+        self.age = age
+        self.my_dict = {
+            'name': 'Dio',
+            'has_pets': False
+        }
+    # Operator Overloading on a dunder method __str()__ which is used to convert an object to its string representation
+    def __str__(self):
+        return f'{self.colour}'
+    # Declaring additional dunder methods
+    def __len__(self):
+        return 0
+    # THE DESTRUCTOR METHOD
+    # BAD PRACTICE TO OVERRIDE THE __del__(). THIS METHOD WILL BE CALLED WHEN AN OBJECT IS ABOUT TO BE DELETED/DESTROYED
+    # If a base class has a __del__() method, the derived class’s __del__() method, if any, must explicitly 
+    # call it to ensure proper deletion of the base class part of the instance.
+    # The __del__() method is called whenever the object is about to be deleted, including when the Program ends.
+    def __del__(self):  # BAD PRACTICE - This dunder method can be used to perform pre-deletion actions
+        print('deleted') # Will be printed when the Code run ends
+    def __call__(self): # This dunder method is invoked when the object/instance is called as a function
+        return 'yes?'
+    def __getitem__(self, i): # Takes an index and returns the element at the index
+        return self.my_dict[i]
+
+
+print("\n\nAFTER OVERLOADING __str__() and adding __len__(), __del__()")
+action_figure2 = Toy2('Blue', 1)
+print("action_figure2.__len__() : ", action_figure2.__len__())
+print("len(action_figure2) : ", len(action_figure2))
+# Note: 'del x' doesn’t directly call 'x.__del__()' — the former decrements the reference count for 'x' by one, 
+# and the latter is only called when x’s reference count reaches zero. 
+print(action_figure2()) # 'action_figure2()' Invokes the __call__() method declared in its class Toy2.
+print("action_figure2['name'] : ", action_figure2['name']) # Calls the __getitem__() method setup in parent class Toy2
+

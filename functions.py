@@ -138,9 +138,9 @@ print("total(10, total(4, 5)): ", total)
 # Check Driver Age
 def checkDriverAge(age=0):
     if (int(age) < 18):
-	    print("Sorry, you are too young to drive this car. Powering off")
+        print("Sorry, you are too young to drive this car. Powering off")
     elif (int(age) > 18):
-	    print("Powering On. Enjoy the ride!")
+        print("Powering On. Enjoy the ride!")
     elif (int(age) == 18):
 	    print("Congratulations on your first year of driving. Enjoy the ride!")
 
@@ -175,7 +175,7 @@ def is_even(num):
 print(is_even(51))
 
 
-# *args and **kwargs
+# IMPORTANT: *args and **kwargs
 def super_func(zero, *args, i='hi', **kwargs): # here, '*args' tells that 'args' can accept any number of positional arguments
     # and '**kwargs' can accept any number of keyword arguments
     print("positional arguments '*args' inside the function: ", *args)
