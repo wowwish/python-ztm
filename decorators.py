@@ -54,3 +54,48 @@ def bye(salutation, emoji):
 say_hello('Hello!', ':)') # calling the decorated function
 print()
 bye('See ya!', ':)')
+
+print()
+print()
+
+# Building another Decorator - to test how fast a code block / function runs
+# Import additional functions required 
+from time import time 
+
+def performance(fn):
+    def wrapper(*args, **kwargs):
+        t1 = time() # Time before running the passed function
+        result = fn(*args, **kwargs)
+        t2 = time() # Time after running the passed function
+        print(f'It took {t2 - t1} s') # t2 - t1 is the total time taken by the function to run
+        return result
+    return wrapper
+
+@performance
+def long_time():
+    for i in range(10000000):
+        i * 5
+
+long_time()
+
+
+print()
+print()
+
+# Create an @authenticated decorator that only allows the function to run is user1 has 'valid' set to True:
+user1 = {
+    'name': 'Sorna',
+    'valid': True #changing this will either run or not run the message_friends function.
+}
+
+def authenticated(fn):
+    def wrapper(*args, **kwargs):
+        if args[0]['valid'] == True:
+            fn(*args, **kwargs)
+    return wrapper
+
+@authenticated
+def message_friends(user):
+    print('message has been sent')
+
+message_friends(user1)
