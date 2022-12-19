@@ -100,9 +100,24 @@ outer()
 
 # DEPENDENCY INJECTION - GOOD PRACTICE FOR CLEAN CODE
 total = 0
-def count(total):
+def count(total): # here, total is the dependency injected into the function
     total += 1
     return total
 
 print("total after three counts using dependency injection: ", count(count(count(total))))
+
+print()
+print()
+
+# Get Dictionary of global variables
+print(global())
+
+# Get dictionary of local variables
+def func():
+    mylocal = 3
+    print(local())
+    print(local['mylocal'])
+
+ func()
+
 
